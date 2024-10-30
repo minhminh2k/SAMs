@@ -40,3 +40,7 @@ kaggle
 ipykernel
 gdown
 opendatasets
+pycocotools
+onnxruntime
+onnx
+install git+https://github.com/facebookresearch/segment-anything.git
