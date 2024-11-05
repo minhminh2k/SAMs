@@ -23,8 +23,8 @@ image = cv2.imread('images/dog.jpg')
 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
 
-sam_checkpoint = "ckpt/sam_vit_b_01ec64.pth"
-model_type = "vit_b"
+sam_checkpoint = "ckpt/sam_vit_h_4b8939.pth"
+model_type = "vit_h"
 
 device = "cuda"
 
@@ -41,7 +41,7 @@ plt.figure(figsize=(20,20))
 plt.imshow(image)
 show_anns(masks)
 plt.axis('off')
-plt.savefig("images/inference.png")
+plt.savefig("images/inference_h.png")
 
 # Tuning parameters
 mask_generator_2 = SamAutomaticMaskGenerator(
@@ -61,4 +61,4 @@ plt.imshow(image)
 plt.axis('off')
 show_anns(masks2)
 
-plt.savefig("images/inference_tuning.png")
+plt.savefig("images/inference_h_tuning.png")
