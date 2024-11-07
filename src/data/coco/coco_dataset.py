@@ -12,22 +12,18 @@ from torch.utils.data import Dataset
 
 class COCODataset(Dataset):
 
-    def __init__(self, root_dir, annotation_file, transform=None, visualize=False):
-        self.root_dir = root_dir
-        self.transform = transform
+    def __init__(self, data_dir, annotation_file, transform=None, img_size: int=1024):
+        self.data_dir = data_dir
+        
+        if transform is None:
+            self.transform = ResizeAndPad(img_size)
+            
         self.coco = COCO(annotation_file)
         self.image_ids = list(self.coco.imgs.keys())
-
-        # Filter out image_ids without any annotations
-        self.image_ids = [image_id for image_id in self.image_ids if len(self.coco.getAnnIds(imgIds=image_id)) > 0]
         
-        print("Length:", len(self.image_ids))
-        if visualize:
-            self.image_ids = self.image_ids[0:50]
-        else:
-            if len(self.image_ids) > 6000:
-                self.image_ids = self.image_ids[0:20000] # 5000
-            else: self.image_ids = self.image_ids[0:2500] # 5000
+        # Filter out image_ids without any annotations
+        self.image_ids = [image_id for image_id in self.image_ids 
+                          if len(self.coco.getAnnIds(imgIds=image_id)) > 0]
                 
     def __len__(self):
         return len(self.image_ids)
@@ -35,7 +31,7 @@ class COCODataset(Dataset):
     def __getitem__(self, idx):
         image_id = self.image_ids[idx]
         image_info = self.coco.loadImgs(image_id)[0]
-        image_path = os.path.join(self.root_dir, image_info['file_name'])
+        image_path = os.path.join(self.data_dir, image_info['file_name'])
         image = cv2.imread(image_path)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
@@ -93,24 +89,3 @@ class ResizeAndPad:
         bboxes = [[bbox[0] + pad_w, bbox[1] + pad_h, bbox[2] + pad_w, bbox[3] + pad_h] for bbox in bboxes]
 
         return image, masks, bboxes
-
-
-def load_datasets(cfg, img_size):
-    transform = ResizeAndPad(img_size)
-    train = COCODataset(root_dir=cfg.dataset.train.root_dir,
-                        annotation_file=cfg.dataset.train.annotation_file,
-                        transform=transform)
-    val = COCODataset(root_dir=cfg.dataset.val.root_dir,
-                      annotation_file=cfg.dataset.val.annotation_file,
-                      transform=transform)
-    train_dataloader = DataLoader(train,
-                                  batch_size=cfg.batch_size,
-                                  shuffle=True,
-                                  num_workers=cfg.num_workers,
-                                  collate_fn=collate_fn)
-    val_dataloader = DataLoader(val,
-                                batch_size=cfg.batch_size,
-                                shuffle=True,
-                                num_workers=cfg.num_workers,
-                                collate_fn=collate_fn)
-    return train_dataloader, val_dataloader

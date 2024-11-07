@@ -1,25 +1,37 @@
 import torch.nn as nn
 import torch.nn.functional as F
-from segment_anything import sam_model_registry
-from segment_anything import SamPredictor
+from ..original_sam.build_sam import sam_model_registry
+from ..original_sam.predictor import SamPredictor
 
-
+# Fine-tuning SAM using bounding boxes as prompts: https://github.com/luca-medeiros/lightning-sam/tree/main
 class Model(nn.Module):
 
-    def __init__(self, cfg):
+    def __init__(
+        self, 
+        cfg,
+        model_type: str = "vit_b", 
+        mode_checkpoint: str = "checkpoints/sam_vit_b_01ec64.pth",
+        freeze_image_encoder: bool = True,
+        freeze_prompt_encoder: bool = True,
+        freeze_mask_decoder: bool = False,
+    ):
         super().__init__()
         self.cfg = cfg
+        self.model_type = model_type
+        self.model_checkpoint = mode_checkpoint
+        self.freeze_image_encoder = freeze_image_encoder
+        self.freeze_prompt_encoder = freeze_prompt_encoder
+        self.freeze_mask_decoder = freeze_mask_decoder
 
-    def setup(self):
-        self.model = sam_model_registry[self.cfg.model.type](checkpoint=self.cfg.model.checkpoint)
+        self.model = sam_model_registry[self.model_type](checkpoint=self.model_checkpoint)
         self.model.train()
-        if self.cfg.model.freeze.image_encoder:
+        if self.freeze_image_encoder:
             for param in self.model.image_encoder.parameters():
                 param.requires_grad = False
-        if self.cfg.model.freeze.prompt_encoder:
+        if self.freeze_prompt_encoder:
             for param in self.model.prompt_encoder.parameters():
                 param.requires_grad = False
-        if self.cfg.model.freeze.mask_decoder:
+        if self.freeze_mask_decoder:
             for param in self.model.mask_decoder.parameters():
                 param.requires_grad = False
 
