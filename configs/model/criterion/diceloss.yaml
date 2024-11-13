@@ -1,0 +1,3 @@
+_target_: src.models.loss.diceloss.DiceLoss
+
+tag: "dice_loss"

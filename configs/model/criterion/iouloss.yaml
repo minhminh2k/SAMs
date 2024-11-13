@@ -1,0 +1,3 @@
+_target_: src.models.loss.iouloss.IoULoss
+
+tag: "IoU_loss"

@@ -3,7 +3,7 @@ import os
 import cv2
 import torch
 from box import Box
-from src.data.coco.coco_dataset import COCODataset
+from src.data.coco.components.coco_dataset import COCODataset
 from ..model import Model
 from torchvision.utils import draw_bounding_boxes
 from torchvision.utils import draw_segmentation_masks

@@ -8,8 +8,9 @@ GAMMA = 2
 
 class FocalLoss(nn.Module):
 
-    def __init__(self, weight=None, size_average=True):
+    def __init__(self, tag="focal_loss", weight=None, size_average=True):
         super().__init__()
+        self.tag = tag
 
     def forward(self, inputs, targets, alpha=ALPHA, gamma=GAMMA, smooth=1):
         inputs = F.sigmoid(inputs)

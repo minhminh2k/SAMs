@@ -4,8 +4,9 @@ import torch.nn.functional as F
 
 class DiceLoss(nn.Module):
 
-    def __init__(self, weight=None, size_average=True):
+    def __init__(self, tag="dice_loss", weight=None, size_average=True):
         super().__init__()
+        self.tag = tag
 
     def forward(self, inputs, targets, smooth=1):
         inputs = F.sigmoid(inputs)

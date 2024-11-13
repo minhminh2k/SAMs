@@ -6,7 +6,7 @@ from pytorch_lightning import LightningDataModule
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader, Dataset, Subset, random_split
 
-from src.data.coco.coco_dataset import COCODataset, collate_fn
+from src.data.coco.components.coco_dataset import COCODataset, collate_fn
 import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -233,4 +233,12 @@ if __name__ == "__main__":
     @hydra.main(version_base="1.3", config_path=config_path, config_name="train.yaml")
     def main(cfg: DictConfig):
         print(OmegaConf.to_yaml(cfg.data, resolve=True))
+        
+        coco = hydra.utils.instantiate(cfg.data)
+        loader = coco.test_dataloader()
+        images, bboxes, masks = next(iter(loader))
+        print(images.shape)
+        print(bboxes.shape)
+        print(masks.shape)
+        
     main()

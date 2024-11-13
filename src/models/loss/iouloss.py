@@ -14,8 +14,9 @@ def calc_iou(pred_mask: torch.Tensor, gt_mask: torch.Tensor):
 
 class IoULoss(nn.Module):
 
-    def __init__(self, weight=None, size_average=True):
+    def __init__(self, tag = "IoU_loss", weight=None, size_average=True):
         super().__init__()
+        self.tag = tag
 
     def forward(self, inputs, targets, iou_predictions, num_masks):
         batch_iou = calc_iou(inputs, targets)

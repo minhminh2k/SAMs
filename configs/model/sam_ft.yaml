@@ -1,0 +1,23 @@
+_target_: src.models.fine_tuning_sam.sam_ft_module.FTSamLitModule
+defaults:
+  - criterion1: focalloss.yaml
+  - criterion_2: diceloss.yaml
+  - criterion_3: iouloss.yaml
+  - net: sam_ft.yaml
+
+optimizer:
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: 0.0008
+  weight_decay: 0.0001
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.LambdaLR
+  _partial_: true
+  # mode: min
+  # factor: 0.1
+  # patience: 10
+
+warmup_steps: 250
+steps: [60000, 86666]
+decay_factor: 10
