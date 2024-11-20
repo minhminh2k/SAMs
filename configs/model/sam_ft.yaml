@@ -1,9 +1,20 @@
 _target_: src.models.fine_tuning_sam.sam_ft_module.FTSamLitModule
 defaults:
-  - criterion1: focalloss.yaml
-  - criterion_2: diceloss.yaml
-  - criterion_3: iouloss.yaml
   - net: sam_ft.yaml
+
+criterion_1:
+  _target_: src.models.loss.focalloss.FocalLoss
+  tag: "focal_loss"
+
+criterion_2:
+  _target_: src.models.loss.diceloss.DiceLoss
+  tag: "dice_loss"
+
+criterion_3:
+  _target_: src.models.loss.iouloss.IoULoss
+  tag: "IoU_loss"
+
+compile: True
 
 optimizer:
   _target_: torch.optim.Adam

@@ -2,7 +2,7 @@ from typing import Any, Dict, Optional, Tuple
 
 import albumentations as A
 import torch
-from pytorch_lightning import LightningDataModule
+from lightning import LightningDataModule
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader, Dataset, Subset, random_split
 
@@ -137,16 +137,17 @@ class COCODataModule(LightningDataModule):
             train_len = int(train_test_len * self.hparams.train_test_split[0])
             test_len = train_test_len - train_len
 
+
             self.data_train, self.data_test = random_split(
                 dataset=train_test_dataset,
                 lengths=[train_len, test_len],
                 generator=torch.Generator().manual_seed(42),
             )
-            self.data_train = val_dataset
+            self.data_val = val_dataset
 
             logging.info("Using random_split for Train and Test Dataset")
             logging.info(f"Train Dataloader: {len(self.data_train)}")
-            logging.info(f"Val Dataloader: {len(self.data_train)}")
+            logging.info(f"Val Dataloader: {len(self.data_val)}")
             logging.info(f"Test Dataloader: {len(self.data_test)}")
 
             

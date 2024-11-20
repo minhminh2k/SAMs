@@ -157,12 +157,22 @@ class FTSamLitModule(LightningModule):
         pred_masks, iou_predictions = self.forward(images, bboxes)
         num_masks = sum(len(pred_mask) for pred_mask in pred_masks)
         
-        loss_focal = self.criterion_1(pred_masks, gt_masks, num_masks)
-        loss_dice = self.criterion_2(pred_masks, gt_masks, num_masks)
-        loss_iou = self.criterion_3(pred_masks, gt_masks, iou_predictions, num_masks)
+        loss_focal = torch.tensor(0., device=self.device)
+        loss_dice = torch.tensor(0., device=self.device)
+        loss_iou = torch.tensor(0., device=self.device)
+        for pred_mask, gt_mask, iou_prediction in zip(pred_masks, gt_masks, iou_predictions):
+            loss_focal += self.criterion_1(pred_mask, gt_mask, num_masks)
+            loss_dice += self.criterion_2(pred_mask, gt_mask, num_masks)
+            loss_iou += self.criterion_3(pred_mask, gt_mask, iou_prediction, num_masks)
+
+        # loss_focal = self.criterion_1(pred_masks, gt_masks, num_masks)
+        # loss_dice = self.criterion_2(pred_masks, gt_masks, num_masks)
+        # loss_iou = self.criterion_3(pred_masks, gt_masks, iou_predictions, num_masks)
         
         total_loss = 20. * loss_focal + loss_dice + loss_iou
-        return loss_focal, loss_dice, loss_iou, total_loss, pred_masks, gt_masks
+        return loss_focal, loss_dice, loss_iou, total_loss, \
+                torch.stack(pred_masks).to(self.device), \
+                torch.stack(gt_masks).to(self.device)
 
     def training_step(
         self, batch: Tuple[torch.Tensor, torch.Tensor], batch_idx: int

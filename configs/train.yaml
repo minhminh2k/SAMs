@@ -8,7 +8,7 @@ defaults:
   - model: sam_ft.yaml
   - callbacks: sam_ft.yaml
   - logger: wandb # set logger here or use command line (e.g. `python train.py logger=tensorboard`)
-  - trainer: gpu.yaml
+  - trainer: default.yaml
   - paths: default
   - extras: default
   - hydra: default

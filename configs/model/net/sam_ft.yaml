@@ -1,0 +1,7 @@
+_target_: src.models.fine_tuning_sam.model.Model
+
+model_type: vit_b
+mode_checkpoint: ${paths.root_dir}/checkpoints/sam_vit_b_01ec64.pth
+freeze_image_encoder: False
+freeze_prompt_encoder: True
+freeze_mask_decoder: False

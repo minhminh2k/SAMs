@@ -1,6 +1,6 @@
 wandb_callback:
   _target_: src.utils.callbacks.wandb_callback_sam_ft.WandbCallback_SAM_FT
   img_size: 1024
-  n_images_to_log: 5
-  image_id: "0006c52e8.jpg"
-  data_path: ${paths.data_dir}/coco
+  n_images_to_log: 4
+  data_path: ${paths.data_dir}/coco/images/val2017
+  annotation_path: ${paths.data_dir}/coco/annotations/instances_val2017.json

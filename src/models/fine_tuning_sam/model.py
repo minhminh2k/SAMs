@@ -8,7 +8,6 @@ class Model(nn.Module):
 
     def __init__(
         self, 
-        cfg,
         model_type: str = "vit_b", 
         mode_checkpoint: str = "checkpoints/sam_vit_b_01ec64.pth",
         freeze_image_encoder: bool = True,
@@ -16,7 +15,6 @@ class Model(nn.Module):
         freeze_mask_decoder: bool = False,
     ):
         super().__init__()
-        self.cfg = cfg
         self.model_type = model_type
         self.model_checkpoint = mode_checkpoint
         self.freeze_image_encoder = freeze_image_encoder
