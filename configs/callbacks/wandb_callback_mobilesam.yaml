@@ -1,6 +1,7 @@
 wandb_callback:
-  _target_: src.utils.callbacks.sam_ft.wandb_callback_sam_ft.WandbCallback_SAM_FT
+  _target_: src.utils.callbacks.mobilesam.wandb_callback_mobilesam.WandbCallback_MobileSAM
   img_size: 1024
   n_images_to_log: 4
+  image_path: ${paths.root_dir}/images/mobilesam/picture2.jpg
   data_path: ${paths.data_dir}/coco/images/val2017
   annotation_path: ${paths.data_dir}/coco/annotations/instances_val2017.json

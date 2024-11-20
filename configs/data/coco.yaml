@@ -6,10 +6,10 @@ data_train_test_dir: ${paths.data_dir}/coco/images/train2017
 train_test_annotation: ${paths.data_dir}/coco/annotations/instances_train2017.json
 data_val_dir: ${paths.data_dir}/coco/images/val2017
 val_annotation: ${paths.data_dir}/coco/annotations/instances_val2017.json
-train_test_subset: 5000
-val_subset: 1000
+train_test_subset: 20000
+val_subset: 2000
 train_test_split: [0.9, 0.1]
 
 batch_size: 1
-num_workers: 2
+num_workers: 4
 pin_memory: False

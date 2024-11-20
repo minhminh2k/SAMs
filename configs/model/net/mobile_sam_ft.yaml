@@ -1,0 +1,7 @@
+_target_: src.models.mobilesam.model.Model
+
+model_type: vit_t
+mode_checkpoint: ${paths.root_dir}/checkpoints/mobilesam/mobile_sam.pt
+freeze_image_encoder: True
+freeze_prompt_encoder: True
+freeze_mask_decoder: False

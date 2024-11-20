@@ -20,6 +20,7 @@ import random
 import math
 from src.utils.sam_ft.sam_ft_utils import draw_image
 import torch.nn.functional as F
+import logging
 
 class WandbCallback_SAM_FT(Callback):
     def __init__(
@@ -46,12 +47,6 @@ class WandbCallback_SAM_FT(Callback):
         self.dataset = COCODataset(data_dir=data_path,
                           annotation_file=annotation_path,
                           transform=None)
-                
-        # np.array(Image.open(image_path).convert("RGB"))
-        # self.sample_image_height, self.sample_image_width = (
-        #     self.sample_image.shape[0],
-        #     self.sample_image.shape[1],
-        # )
         
         self.image_ids = random.sample(self.dataset.image_ids, self.num_samples)
         
@@ -84,12 +79,16 @@ class WandbCallback_SAM_FT(Callback):
             )
             image_output = draw_image(image, masks.squeeze(1), boxes=None, labels=None)
             image_output = image_output.unsqueeze(0)
-            image_output = F.interpolate(image_output, size=(self.img_size//2, self.image_ids//2), mode='bilinear', align_corners=False)
-
-            image_output = image_output.queeze()
+            image_output = F.interpolate(image_output, 
+                                         size=(int(self.img_size/2), int(self.img_size/2)), mode='bilinear', align_corners=False)
+            
+            image_output = image_output.squeeze()
+            image_output = image_output.cpu().numpy().astype(np.uint8)
+            image_output = torch.from_numpy(image_output)
             sample_image.append(image_output)
         
-        grid = make_grid(sample_image, nrow=math.sqrt(self.num_samples))
+        grid = torch.stack(sample_image)
+        grid = make_grid(grid, nrow=int(math.sqrt(self.num_samples)))
         grid = grid.cpu().numpy().transpose(1, 2, 0)
         
         wandb_logger = trainer.logger
@@ -140,16 +139,19 @@ class WandbCallback_SAM_FT(Callback):
             )
             image_output = draw_image(image, masks.squeeze(1), boxes=None, labels=None)
             image_output = image_output.unsqueeze(0)
-            image_output = F.interpolate(image_output, size=(self.img_size//2, self.image_ids//2), mode='bilinear', align_corners=False)
-
-            image_output = image_output.queeze()
+            image_output = F.interpolate(image_output, 
+                                         size=(int(self.img_size/2), int(self.img_size/2)), mode='bilinear', align_corners=False)
+            
+            image_output = image_output.squeeze()
+            image_output = image_output.cpu().numpy().astype(np.uint8)
+            image_output = torch.from_numpy(image_output)
             sample_image.append(image_output)
         
-        grid = make_grid(sample_image, nrow=math.sqrt(self.num_samples))
+        grid = torch.stack(sample_image)
+        grid = make_grid(grid, nrow=int(math.sqrt(self.num_samples)))
         grid = grid.cpu().numpy().transpose(1, 2, 0)
         
-        # image = sample_image[0].cpu().numpy().transpose(1, 2, 0)
-        
+                
         wandb_logger = trainer.logger
         wandb_logger.log_image(
             key=tags,

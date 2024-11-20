@@ -3,7 +3,7 @@ defaults:
   - early_stopping
   - model_summary
   - rich_progress_bar
-  - wandb_callback_sam_ft.yaml
+  - wandb_callback_mobilesam.yaml # sam_ft
   - _self_
 
 model_checkpoint:

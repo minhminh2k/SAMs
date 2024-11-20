@@ -22,7 +22,7 @@ def lr_lambda(step, warmup_steps, steps, decay_factor):
     else:
         return 1 / (decay_factor**2)
 
-class FTSamLitModule(LightningModule):
+class MobileSamLitModule(LightningModule):
     """Example of a `LightningModule` for Fine-tuning SAM.
 
     A `LightningModule` implements 8 key methods:
